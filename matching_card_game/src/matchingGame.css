@@ -1,0 +1,32 @@
+.topHeader {
+    height: 17.5vh;
+}
+
+.gridContainer {
+    display: flex;
+    flex-wrap: wrap;
+    height: 80vh;
+    width: 100vw;
+    border-color: white;
+    border-style: solid;
+    background-color:grey;
+
+}
+
+.gridProp {
+    color: black;
+    border-width: 2px;
+    border: 2px;
+    border-color: white;
+    border-style: solid;
+  }
+
+.row-flex {
+    width: 100vw;
+}
+
+.title {
+    color: gold;
+}
+
+
