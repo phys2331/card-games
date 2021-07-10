@@ -1,0 +1,21 @@
+---
+cards:
+    - text: Some quick example text to build on the card title and make up the bulk of the card's content. I need to add extra text here so that I can test how it will look when I hover over it. and the text should be visible, it'll just be kind of ugly right now. Wow, you really need a lot of text to do this.
+    - img: https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.pixelstalk.net%2Fwp-content%2Fuploads%2F2016%2F06%2FHD-Country-Image.jpg&f=1&nofb=1
+      alt-text: example-image-1
+    - text: Some quick example text to build on the card title and make up the bulk of the card's content.
+    - text: This is some text to test the functionality and formatting of the cards. So far, seems to going pretty well.
+    - img: https://external-content.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.pixelstalk.net%2Fwp-content%2Fuploads%2F2016%2F06%2FHD-Country-Image.jpg&f=1&nofb=1
+      alt-text: example-image-2
+---
+cards:
+    - img: img1.png
+      alt-text: arrows, all the same size, pointing the same direction
+    - text: uniform field
+    - text: $\vec{E} = \langle a, b, c \rangle, a, b, c \containedin \R$
+---
+cards:
+    - img: carrot.png
+      alt-text: a rounded, stake-like vegetable with a spray of green on top
+    - text: Carrot
+    - text: Crunchy, orange food

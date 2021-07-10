@@ -9,8 +9,26 @@
     width: 100vw;
     border-color: white;
     border-style: solid;
-    background-color:grey;
+    justify-content: space-around;
+    align-content: space-around;
+}
 
+.card {
+    overflow: hidden;
+    width: 18em;
+    height: 10em;
+    margin: 0.25em;
+    padding: 0.5em;
+}
+
+.card:hover {
+    min-height: 10em;
+    height: auto;
+    background-color: #eee;
+}
+
+.selected {
+    background-color: rgb(107, 95, 179);
 }
 
 .gridProp {
