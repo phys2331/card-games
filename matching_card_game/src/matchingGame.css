@@ -27,8 +27,12 @@
     background-color: #eee;
 }
 
-.selected {
+.selected, .selected:hover {
     background-color: rgb(107, 95, 179);
+}
+
+.matched, .matched:hover {
+    opacity: 0.3;
 }
 
 .gridProp {

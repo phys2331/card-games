@@ -2,8 +2,6 @@
 import './App.css';
 import './matchingGame.css';
 import React from "react"
-import Button from "react-bootstrap/Button"
-import Container from "react-bootstrap/Container"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Card from "react-bootstrap/Card"
@@ -22,7 +20,7 @@ function shuffleArray(array) {
 class CardBlock extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { cardContent: [], cardInfo: [] };
+    this.state = { cardContent: [], cardInfo: [], curGroup: -1, selected: 0};
   }
 
   initializeCards(data) {
@@ -30,7 +28,7 @@ class CardBlock extends React.Component {
     const cardOrder = [];
     for (let i = 0; i < this.state.cardContent.length; i++) {
       for (let j = 0; j < this.state.cardContent[i].cards.length; j++) {
-        cardOrder.push({ 'group': i, 'num': j });
+        cardOrder.push({ 'group': i, 'num': j, 'status': "unselected" });
       }
     }
     shuffleArray(cardOrder);
@@ -44,6 +42,42 @@ class CardBlock extends React.Component {
       .catch(e => console.error('Couldn\'t read yaml file. The error was:\n', e));
   }
 
+  changeSelectedCards(newCards, newStatus) { // set all selected cards to the new status
+    for (let i = 0; i < newCards.length; i++) {
+      if (newCards[i].status === "selected") {
+        newCards[i].status = newStatus;
+      }
+    }
+  }
+
+  handleClick(i) {
+    if (this.state.cardInfo[i].status !== 'unselected') { // already selected or matched
+      return;
+    }
+    var newGroup = this.state.curGroup, newCntSelected = this.state.selected;
+    var newCardInfo = this.state.cardInfo.slice();
+    if (this.state.curGroup === -1) { // if first card in group selected
+      newCardInfo[i].status = 'selected';
+      newGroup = this.state.cardInfo[i].group;
+      newCntSelected = 1;
+    } else {
+      if (this.state.curGroup !== this.state.cardInfo[i].group) { // wrong card
+        this.changeSelectedCards(newCardInfo, "unselected");
+        newGroup = -1;
+        newCntSelected = 0;
+      } else { // right card
+        newCardInfo[i].status = 'selected';
+        newCntSelected = this.state.selected + 1;
+        if (newCntSelected === this.state.cardContent[this.state.curGroup].cards.length) {
+          this.changeSelectedCards(newCardInfo, "matched");
+          newGroup = -1;
+          newCntSelected = 0;
+        }
+      }
+    }
+    this.setState({ curGroup: newGroup, selected: newCntSelected, cardInfo: newCardInfo, });
+  }
+
   createRowsAndColumns() {
 
   }
@@ -55,9 +89,15 @@ class CardBlock extends React.Component {
       let cardGroup = this.state.cardInfo[i].group, cardNum = this.state.cardInfo[i].num;
       let card = this.state.cardContent[cardGroup].cards[cardNum];
       if ('text' in card) {
-        cardList.push(<Card key={i}><Card.Text>{card['text']}</Card.Text></Card>);
+        cardList.push(
+        <Card key={i} className={this.state.cardInfo[i].status} onClick={() => this.handleClick(i)}>
+          <Card.Text>{card['text']}</Card.Text>
+        </Card>);
       } else if ('img' in card) {
-        cardList.push(<Card key={i}><Card.Img src={card['img']} alt={card['alt-text']} /></Card>);
+        cardList.push(
+        <Card key={i} className={this.state.cardInfo[i].status} onClick={() => this.handleClick(i)}>
+          <Card.Img src={card['img']} alt={card['alt-text']} />
+        </Card>);
       } else {
         console.log('Unrecognized card format:', card);
       }
