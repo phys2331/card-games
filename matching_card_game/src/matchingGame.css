@@ -19,13 +19,27 @@
     margin: 0.25em;
     padding: 0.5em;
     text-align: center;
+    border: black;
+    border-style:solid;
 }
 
-.card:hover {
-    min-height: 10em;
-    height: auto;
-    background-color: #eee;
+.cardRender{
+    display: flex;           /* establish flex container */
+    flex-direction: column;  /* make main axis vertical */
+    justify-content: center; /* center items vertically, in this case */
+    align-items: center;     /* center items horizontally, in this case */
+
 }
+
+.ellipseBox{
+    border: white;
+    border-style:solid;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;    
+}
+
 
 .selected, .selected:hover {
     background-color: rgb(107, 95, 179);
@@ -42,6 +56,7 @@
     margin: 10px;
     border-color: white;
     border-style: solid;
+    background-color: white;
   }
 
 .row-flex {
@@ -55,6 +70,42 @@
 .gridRow{
     background-color: silver;
 }
+
+
+.Overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,.0001) !important;
+  }
+
+
+.Modal {
+
+    display: flex;  
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 100px;
+    left: 50px;
+    right: 50px;
+    bottom: 100px;
+    background-color: white;
+
+
+    border: black;
+    border-style: solid;
+    border-radius: 20px;
+    border-width: 10px;
+  }
+
+
+
+
+  
 
 
 

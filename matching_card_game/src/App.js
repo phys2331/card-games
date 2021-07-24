@@ -1,11 +1,17 @@
 //import logo from './logo.svg';
 import './App.css';
 import './matchingGame.css';
-import React from "react"
+import React, { useState } from "react"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Card from "react-bootstrap/Card"
 import yaml from "js-yaml"
+import Modal from "react-modal"
+
+// fontawesome imports
+import { faEllipsisH } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+
 
 
 function shuffleArray(array) {
@@ -16,12 +22,19 @@ function shuffleArray(array) {
 }
 
 
+
+
+
 //Function to create the cards as well as the playing grid
 class CardBlock extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { cardContent: [], cardInfo: [], curGroup: -1, selected: 0};
+    this.state = { cardContent: [], cardInfo: [], curGroup: -1, selected: 0 };
+
   }
+
+
+
 
   initializeCards(data) {
     this.setState({ cardContent: yaml.loadAll(data) });
@@ -78,6 +91,38 @@ class CardBlock extends React.Component {
     this.setState({ curGroup: newGroup, selected: newCntSelected, cardInfo: newCardInfo, });
   }
 
+
+  state = {
+    show: false,
+  };
+
+  showModalText(card) {
+    console.log(card)
+    console.log("IT WAS CLICKED")
+    this.setState({
+      showText: true,
+      cardOut: card
+    });
+  };
+
+  showModalImage(card) {
+    console.log(card)
+    console.log("IT WAS CLICKED")
+    this.setState({
+      showImage: true,
+      cardOut: card
+    });
+  };
+
+
+  closeModal() {
+    console.log("IT WAS CLICKED")
+    this.setState({
+      showImage: false,
+      showText: false
+    });
+  };
+
   createRowsAndColumns() {
 
   }
@@ -90,14 +135,55 @@ class CardBlock extends React.Component {
       let card = this.state.cardContent[cardGroup].cards[cardNum];
       if ('text' in card) {
         cardList.push(
-        <Card key={i} className={this.state.cardInfo[i].status} onClick={() => this.handleClick(i)}>
-          <Card.Text>{card['text']}</Card.Text>
-        </Card>);
+
+          <div className="cardRender">
+            <Card key={i} className={this.state.cardInfo[i].status} onClick={() => this.handleClick(i)}>
+
+              <Card.Text>{card['text']}</Card.Text>
+              
+
+            </Card>
+
+            <div className="ellipseBox" onClick = {() => {this.showModalText(card['text']);}}>
+              <FontAwesomeIcon icon={faEllipsisH} style={{ color: 'Black' }} size="2x" className="ellipseIcon" />
+            </div>
+            
+            <Modal isOpen={this.state.showText} className="Modal" overlayClassName="Overlay" >
+              <div>
+              <p>
+                {this.state.cardOut}
+              </p>
+              <button onClick = {e => {this.closeModal();}}> Close </button>
+              </div>
+            </Modal>
+
+          </div>
+
+
+        );
       } else if ('img' in card) {
         cardList.push(
-        <Card key={i} className={this.state.cardInfo[i].status} onClick={() => this.handleClick(i)}>
-          <Card.Img src={card['img']} alt={card['alt-text']} />
-        </Card>);
+
+          <div className="cardRender">
+            <Card key={i} className={this.state.cardInfo[i].status} onClick={() => this.handleClick(i)}>
+              <Card.Img src={card['img']} alt={card['alt-text']} />
+            </Card>
+
+            <div className="ellipseBox" onClick = {() => {this.showModalImage(card['img']);}}>
+              <FontAwesomeIcon icon={faEllipsisH} style={{ color: 'Black' }} size="2x" className="ellipseIcon" />
+            </div>
+
+            <Modal isOpen={this.state.showImage}>
+              <div>
+              <p>
+              <Card.Img src={this.state.cardOut} alt={card['alt-text']} />
+              </p>
+              <button onClick = {e => {this.closeModal();}}> Close </button>
+              </div>
+            </Modal>
+
+          </div>
+        );
       } else {
         console.log('Unrecognized card format:', card);
       }
@@ -112,9 +198,10 @@ class CardBlock extends React.Component {
 
     return chunks.map(chunk => (
 
-      
-      <Row className="row-flex row-flex justify-content-md-center"> {chunk.map(item => <Col xl={2} lg={2} md={2} sm={12} xs={12} className="gridProp" >{item}</Col>)}</Row> 
-      
+      <div>
+        <Row className="row-flex row-flex justify-content-md-center"> {chunk.map(item => <Col xl={2} lg={2} md={2} sm={12} xs={12} className="gridProp" >{item}</Col>)}</Row>
+      </div>
+
 
     ));
   }
@@ -128,72 +215,19 @@ function App() {
         <div className="title">
           Matching Card Game (Work In Progess)
         </div>
+
+
+
+
+
+
       </header>
       <body>
         <div>
 
-        <Row className="row-flex">
-          <CardBlock></CardBlock>
-        </Row>
-          {/* TODO: Consider creating the grid using a for loop, not one by one. */}
-          {/* So far the app should be rather responsive and adjust to diferent screen sizes. */}
-
-          {/*<Container className="gridContainer" fluid>
           <Row className="row-flex">
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">1</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">2</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">3</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">4</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">5</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">6</Col>
+            <CardBlock></CardBlock>
           </Row>
-
-          <Row className="row-flex">
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">7</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">8</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">9</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">10</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">11</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">12</Col>
-          </Row>
-
-          <Row className="row-flex">
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">13</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">14</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">15</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">16</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">17</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">18</Col>
-          </Row>
-
-          <Row className="row-flex">
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">19</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">20</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">21</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">22</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">23</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">24</Col>
-          </Row>
-
-          <Row className="row-flex">
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">25</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">26</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">27</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">28</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">29</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">30</Col>
-          </Row>
-
-          <Row className="row-flex">
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">31</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">32</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">33</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">34</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">35</Col>
-            <Col xl={2} lg={2} md={2} sm={2} xs={2} className="gridProp">36</Col>
-          </Row>
-
-        </Container>*/}
 
         </div>
       </body>
