@@ -29,7 +29,7 @@ function shuffleArray(array) {
 class CardBlock extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { cardContent: [], cardInfo: [], curGroup: -1, selected: 0 };
+    this.state = { cardContent: [], cardInfo: [], curGroup: -3, selected: 0, groupsFound: 0 };
 
   }
 
@@ -69,20 +69,22 @@ class CardBlock extends React.Component {
     }
     var newGroup = this.state.curGroup, newCntSelected = this.state.selected;
     var newCardInfo = this.state.cardInfo.slice();
-    if (this.state.curGroup === -1) { // if first card in group selected
+    if (this.state.curGroup < 0) { // if first card in group selected
       newCardInfo[i].status = 'selected';
       newGroup = this.state.cardInfo[i].group;
       newCntSelected = 1;
     } else {
       if (this.state.curGroup !== this.state.cardInfo[i].group) { // wrong card
         this.changeSelectedCards(newCardInfo, "unselected");
-        newGroup = -1;
+        newGroup = -2;
         newCntSelected = 0;
       } else { // right card
         newCardInfo[i].status = 'selected';
         newCntSelected = this.state.selected + 1;
         if (newCntSelected === this.state.cardContent[this.state.curGroup].cards.length) {
           this.changeSelectedCards(newCardInfo, "matched");
+          let newGroupsFound = this.state.groupsFound + 1;
+          this.setState({groupsFound: newGroupsFound });
           newGroup = -1;
           newCntSelected = 0;
         }
@@ -125,6 +127,27 @@ class CardBlock extends React.Component {
 
   createRowsAndColumns() {
 
+  }
+
+  getInstructions() {
+    if (this.state.curGroup === -3) { // case for the very first instruction
+      return `The goal of this game is to match the cards with related concepts. 
+      You can do this by clicking sequentially on all the cards that belong together. 
+      In this set of cards, there are ${this.state.cardContent.length} 
+      groups of cards. To start, select any card.`;
+    } 
+    if (this.state.curGroup === -2) { // case for when wrong card is selected
+      return "Incorrect. This card is not related to the ones previously selected. Select a card.";
+    }
+    if (this.state.curGroup === -1) { // case for when a group is matched
+      let groupsLeft = this.state.cardContent.length-this.state.groupsFound;
+      if (groupsLeft === 0) {
+        return "Well done! You've matched all of the cards."
+      }
+      return `Correct! There are ${groupsLeft} unmatched groups left. Select any unselected card.`;
+    }
+    let groupCardCount = this.state.cardContent[this.state.curGroup].cards.length;
+    return `Selected ${this.state.selected} out of the ${groupCardCount} cards in this group.`;
   }
 
   render() {
@@ -192,18 +215,16 @@ class CardBlock extends React.Component {
 
     while (cardList.length) {
       chunks.push(cardList.splice(0, 5));
-
-
     }
 
-    return chunks.map(chunk => (
-
-      <div>
-        <Row className="row-flex row-flex justify-content-md-center"> {chunk.map(item => <Col xl={2} lg={2} md={2} sm={12} xs={12} className="gridProp" >{item}</Col>)}</Row>
-      </div>
-
-
-    ));
+    return <div>
+      <div className='instructions'>{this.getInstructions()}</div>
+      {chunks.map(chunk => (
+        <Row className="row-flex row-flex justify-content-md-center">
+          {chunk.map(item => <Col xl={2} lg={2} md={2} sm={12} xs={12} className="gridProp" >{item}</Col>)}
+        </Row> 
+      ))}
+    </div>;
   }
 }
 

@@ -103,7 +103,12 @@
   }
 
 
-
+  .instructions {
+    color: #ddd;
+    text-align: center;
+    width: 50vw;
+    margin: 5px 25vw;
+}
 
   
 
