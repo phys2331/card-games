@@ -83,6 +83,7 @@ class CardBlock extends React.Component {
         newCntSelected = this.state.selected + 1;
         if (newCntSelected === this.state.cardContent[this.state.curGroup].cards.length) {
           this.changeSelectedCards(newCardInfo, "matched");
+          newCardInfo.sort((a, b) => b.status.localeCompare(a.status))
           let newGroupsFound = this.state.groupsFound + 1;
           this.setState({groupsFound: newGroupsFound });
           newGroup = -1;
