@@ -1,15 +1,48 @@
-.topHeader {
-    height: 17.5vh;
+
+/* MAIN PAGE CSS */
+/* ---------------------------------------- */
+
+.title {
+    color: gold;
 }
 
-.gridContainer {
-    display: flex;
-    flex-wrap: wrap;
-    height: 80vh;
-    width: 100vw;
+.topHeader {
+    height: 10vh;
+}
 
-    justify-content: space-around;
-    align-content: space-around;
+.mainDiv {
+    
+    display: flex;  
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.mainReturnDiv{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+
+
+/* CARD CSS */
+/* ---------------------------------------- */
+
+.gridProp {
+    color: black;
+    margin: 10px;
+    background-color: white;
+    
+    border: 2px;
+    border: black;
+    border-style: solid;
+    border-radius: 10px;
+    border-width: 2px;
+  }
+
+.row-flex {
+    width: 100vw;
 }
 
 .card {
@@ -41,6 +74,11 @@
 }
 
 
+.card-img{
+    width: 100%;
+    height: 100%;
+ }
+
 .selected, .selected:hover {
     background-color: rgb(107, 95, 179);
 }
@@ -49,57 +87,21 @@
     opacity: 0.3;
 }
 
-.gridProp {
-    color: black;
-    border-width: 2px;
-    border: 2px;
-    margin: 10px;
-    border-color: white;
-    border-style: solid;
-    background-color: white;
-  }
 
-.row-flex {
-    width: 100vw;
-}
-
-.title {
-    color: gold;
-}
-
-.gridRow{
-    background-color: silver;
-}
-
-
-.Overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0,0,0,.0001) !important;
-  }
-
+/* MODAL CSS */
+/* ---------------------------------------- */
 
 .Modal {
-
-    display: flex;  
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-    position: absolute;
-    top: 100px;
-    left: 50px;
-    right: 50px;
-    bottom: 100px;
+    height: 400px;
+    width: 500px;
     background-color: white;
 
 
     border: black;
     border-style: solid;
     border-radius: 20px;
-    border-width: 10px;
+    border-width: 5px;
+
   }
 
 
@@ -110,7 +112,94 @@
     margin: 5px 25vw;
 }
 
+
+.modalContainer{
+    height: 100vh;
+    width: 100vw;
+
+    display: flex;  
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.Overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,.0001) !important;
+  }
+
+.ModalImage {
+    width: 100%;
+    height: 100%;
+}
+
+.modalRow {
+    width: 80%;
+    height: 100%;
+
+    display: flex;  
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.outerModalDiv{
+    width: 100%;
+    height: 100%;
+
+    display: flex;  
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.innerModalDiv{
+    width: 60%;
+    height: 80%;
+
+    display: flex;  
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.colModalImage {
+    width: 100%;
+    height: 70%;
+}
+
+.imageModal {
+    width: 100%;
+    height: 100%;
+}
+
+.colModalText {
+    width: 100%;
+    height: 70%;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.textModal {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+
+.basicBorder {
+    border: black;
+    border-style: solid;
+}
+
+.buttonModal {
+    width: 100%;
+    height: 100%;
+}
   
-
-
-

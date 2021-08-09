@@ -7,6 +7,7 @@ import Col from "react-bootstrap/Col"
 import Card from "react-bootstrap/Card"
 import yaml from "js-yaml"
 import Modal from "react-modal"
+import Button from "react-bootstrap/Button"
 
 // fontawesome imports
 import { faEllipsisH } from "@fortawesome/free-solid-svg-icons";
@@ -85,7 +86,7 @@ class CardBlock extends React.Component {
           this.changeSelectedCards(newCardInfo, "matched");
           newCardInfo.sort((a, b) => b.status.localeCompare(a.status))
           let newGroupsFound = this.state.groupsFound + 1;
-          this.setState({groupsFound: newGroupsFound });
+          this.setState({ groupsFound: newGroupsFound });
           newGroup = -1;
           newCntSelected = 0;
         }
@@ -136,12 +137,12 @@ class CardBlock extends React.Component {
       You can do this by clicking sequentially on all the cards that belong together. 
       In this set of cards, there are ${this.state.cardContent.length} 
       groups of cards. To start, select any card.`;
-    } 
+    }
     if (this.state.curGroup === -2) { // case for when wrong card is selected
       return "Incorrect. This card is not related to the ones previously selected. Select a card.";
     }
     if (this.state.curGroup === -1) { // case for when a group is matched
-      let groupsLeft = this.state.cardContent.length-this.state.groupsFound;
+      let groupsLeft = this.state.cardContent.length - this.state.groupsFound;
       if (groupsLeft === 0) {
         return "Well done! You've matched all of the cards."
       }
@@ -157,6 +158,8 @@ class CardBlock extends React.Component {
     for (let i = 0; i < this.state.cardInfo.length; i++) {
       let cardGroup = this.state.cardInfo[i].group, cardNum = this.state.cardInfo[i].num;
       let card = this.state.cardContent[cardGroup].cards[cardNum];
+
+      //This manages the cards if all they contain is text
       if ('text' in card) {
         cardList.push(
 
@@ -164,28 +167,55 @@ class CardBlock extends React.Component {
             <Card key={i} className={this.state.cardInfo[i].status} onClick={() => this.handleClick(i)}>
 
               <Card.Text>{card['text']}</Card.Text>
-              
+
 
             </Card>
 
-            <div className="ellipseBox" onClick = {() => {this.showModalText(card['text']);}}>
+            <div className="ellipseBox" onClick={() => { this.showModalText(card['text']); }}>
               <FontAwesomeIcon icon={faEllipsisH} style={{ color: 'Black' }} size="2x" className="ellipseIcon" />
             </div>
-            
-            <Modal isOpen={this.state.showText} className="Modal" overlayClassName="Overlay" >
-              <div>
-              <p>
-                {this.state.cardOut}
-              </p>
-              <button onClick = {e => {this.closeModal();}}> Close </button>
-              </div>
-            </Modal>
+
+
+            <div>
+
+              <Modal isOpen={this.state.showText} className="modalContainer" overlayClassName="Overlay" >
+
+                <div className="Modal">
+
+                  <div className="outerModalDiv ">
+
+
+                    <Row className="row-flex  justify-content-md-center modalRow  ">
+
+
+                      <div class="col-xl-12 colModalText" >
+                        <div className=" textModal">
+                          {this.state.cardOut}
+                        </div>
+                      </div>
+
+                      <div class="col-xl-12  " >
+                        <Button size="lg" onClick={e => { this.closeModal(); }} variant="primary btn-block">Close</Button>{' '}
+                      </div>
+
+
+                    </Row>
+
+                  </div>
+
+                </div>
+
+              </Modal>
+
+            </div>
 
           </div>
 
 
         );
-      } else if ('img' in card) {
+      }
+      //This manages the cards if they contain an image
+      else if ('img' in card) {
         cardList.push(
 
           <div className="cardRender">
@@ -193,18 +223,41 @@ class CardBlock extends React.Component {
               <Card.Img src={card['img']} alt={card['alt-text']} />
             </Card>
 
-            <div className="ellipseBox" onClick = {() => {this.showModalImage(card['img']);}}>
+            <div className="ellipseBox" onClick={() => { this.showModalImage(card['img']); }}>
               <FontAwesomeIcon icon={faEllipsisH} style={{ color: 'Black' }} size="2x" className="ellipseIcon" />
             </div>
 
-            <Modal isOpen={this.state.showImage}>
-              <div>
-              <p>
-              <Card.Img src={this.state.cardOut} alt={card['alt-text']} />
-              </p>
-              <button onClick = {e => {this.closeModal();}}> Close </button>
-              </div>
-            </Modal>
+
+            <div>
+
+              <Modal isOpen={this.state.showImage} className="modalContainer" overlayClassName="Overlay" >
+
+                <div className="Modal">
+
+                  <div className="outerModalDiv ">
+
+
+                    <Row className="row-flex  justify-content-md-center modalRow  ">
+
+
+                      <div class="col-xl-12 colModalImage" >
+                        <img src={this.state.cardOut} alt={card['alt-text']} className=" imageModal" />
+                      </div>
+
+                      <div class="col-xl-12  " >
+                        <Button size="lg" onClick={e => { this.closeModal(); }} variant="primary btn-block">Close</Button>{' '}
+                      </div>
+
+
+                    </Row>
+
+                  </div>
+
+                </div>
+
+              </Modal>
+
+            </div>
 
           </div>
         );
@@ -219,12 +272,20 @@ class CardBlock extends React.Component {
     }
 
     return <div>
+
       <div className='instructions'>{this.getInstructions()}</div>
-      {chunks.map(chunk => (
-        <Row className="row-flex row-flex justify-content-md-center">
-          {chunk.map(item => <Col xl={2} lg={2} md={2} sm={12} xs={12} className="gridProp" >{item}</Col>)}
-        </Row> 
-      ))}
+
+      
+        {chunks.map(chunk => (
+          <div className="mainReturnDiv">
+          <Row className="row-flex justify-content-md-center">
+            {chunk.map(item => <Col xl={2} lg={2} md={2} sm={12} xs={12} className="gridProp" >{item}</Col>)}
+          </Row>
+          </div>
+        ))}
+
+      
+
     </div>;
   }
 }
@@ -245,13 +306,14 @@ function App() {
 
       </header>
       <body>
-        <div>
+        <div className="mainDiv">
 
           <Row className="row-flex">
             <CardBlock></CardBlock>
           </Row>
 
         </div>
+
       </body>
 
 
