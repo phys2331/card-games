@@ -12,28 +12,11 @@ cards:
     - img: img1.png
       alt-text: arrows, all the same size, pointing the same direction
     - text: uniform field
-    - text: $\vec{E} = \langle a, b, c \rangle, a, b, c \containedin \R$
+    - text: $$\vec{E} = 493985*\langle a, b, c \rangle a, b, c \in \R$$
+    - text: The equation is $$\vec{E} = \langle a, b, c \rangle a, b, c \in \R$$, cause I want this to work with additional text
 ---
 cards:
     - img: carrot.png
       alt-text: a rounded, stake-like vegetable with a spray of green on top
     - text: Carrot
     - text: Crunchy, orange food
----
-cards:
-    - text: Carrot3
-    - text: Crunchy, orange food3
----
-cards:
-    - text: Carrot4
-    - text: Crunchy, orange food4
-    - text: Carrot4
-    - text: Crunchy, orange food4
-    - text: Carrot4
-    - text: Crunchy, orange food4
-    - text: Carrot4
-    - text: Crunchy, orange food4
-    - text: Carrot4
-    - text: Crunchy, orange food4
-    - text: Carrot4
-    - text: Crunchy, orange food4

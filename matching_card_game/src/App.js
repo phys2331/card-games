@@ -1,13 +1,15 @@
 //import logo from './logo.svg';
 import './App.css';
 import './matchingGame.css';
-import React, { useState } from "react"
+import React, { useEffect, useRef } from "react"
 import Row from "react-bootstrap/Row"
 import Col from "react-bootstrap/Col"
 import Card from "react-bootstrap/Card"
 import yaml from "js-yaml"
 import Modal from "react-modal"
 import Button from "react-bootstrap/Button"
+import "katex/dist/katex.min.css";
+import renderMathInElement from 'katex/dist/contrib/auto-render';
 
 // fontawesome imports
 import { faEllipsisH } from "@fortawesome/free-solid-svg-icons";
@@ -22,21 +24,67 @@ function shuffleArray(array) {
   }
 }
 
+// Function to create element that autorenders equations in text
+function CardText(props) {
+  const ref = useRef(); // create reference for use of renderMathInElement
 
+  // every load of element, render math
+  useEffect(() => {
+    if (ref.current) {
+      renderMathInElement(ref.current);
+    }
+  });
 
+  return (<span ref={ref}>{props.text}</span>);
+}
 
+// Function to create cardmodal element (we only need one of these modals, any more is excessive)
+function CardModal(props) {
+  let innercontent;
+  if (!props.card) { // if undefined
+    innercontent = <div className="col-xl-12 colModalText">Undef</div>;
+  } else if ('text' in props.card) {
+    innercontent = (<div className="col-xl-12 colModalText">
+      <div className="textModal">
+        <CardText text={props.card['text']} />
+      </div>
+    </div>);
+  } else if ('img' in props.card) {
+    innercontent = (<div className="col-xl-12 colModalImage">
+      <img src={props.card['img']} alt={props.card['alt-text']} className=" imageModal" />
+    </div>);
+  } 
+
+  return (
+    <Modal isOpen={props.show} className="modalContainer" overlayClassName="Overlay" >
+      <div className="Modal">
+        <div className="outerModalDiv">
+          <Row className="row-flex justify-content-md-center modalRow">
+            {innercontent}
+            <div className="col-xl-12">
+              <Button 
+                size="lg" 
+                onClick={e => { props.closeFunc(); }} 
+                variant="primary btn-block">
+                  Close
+              </Button>
+            </div>
+          </Row>
+        </div>
+      </div>
+    </Modal>
+  );
+}
 
 //Function to create the cards as well as the playing grid
 class CardBlock extends React.Component {
   constructor(props) {
     super(props);
     this.state = { cardContent: [], cardInfo: [], curGroup: -3, selected: 0, groupsFound: 0 };
-
+    this.closeModal = this.closeModal.bind(this); // bind function for passing to CardModal element
   }
 
-
-
-
+  // load information from yaml data, create order and status for cards
   initializeCards(data) {
     this.setState({ cardContent: yaml.loadAll(data) });
     const cardOrder = [];
@@ -49,6 +97,7 @@ class CardBlock extends React.Component {
     this.setState({ cardInfo: cardOrder });
   }
 
+  // load data from yaml, when done call to initialize cards
   componentDidMount() {
     fetch('test.yaml')
       .then(response => response.text())
@@ -56,7 +105,8 @@ class CardBlock extends React.Component {
       .catch(e => console.error('Couldn\'t read yaml file. The error was:\n', e));
   }
 
-  changeSelectedCards(newCards, newStatus) { // set all selected cards to the new status
+  // set all selected cards to the new status
+  changeSelectedCards(newCards, newStatus) {
     for (let i = 0; i < newCards.length; i++) {
       if (newCards[i].status === "selected") {
         newCards[i].status = newStatus;
@@ -64,6 +114,7 @@ class CardBlock extends React.Component {
     }
   }
 
+  // deal with a click on a card
   handleClick(i) {
     if (this.state.cardInfo[i].status !== 'unselected') { // already selected or matched
       return;
@@ -95,42 +146,22 @@ class CardBlock extends React.Component {
     this.setState({ curGroup: newGroup, selected: newCntSelected, cardInfo: newCardInfo, });
   }
 
-
-  state = {
-    show: false,
-  };
-
-  showModalText(card) {
-    console.log(card)
-    console.log("IT WAS CLICKED")
+  // change card to display on the modal
+  openModal(card) {
     this.setState({
-      showText: true,
+      showModal: true,
       cardOut: card
     });
   };
 
-  showModalImage(card) {
-    console.log(card)
-    console.log("IT WAS CLICKED")
-    this.setState({
-      showImage: true,
-      cardOut: card
-    });
-  };
-
-
+  // close modal by changing card to -1
   closeModal() {
-    console.log("IT WAS CLICKED")
     this.setState({
-      showImage: false,
-      showText: false
+      showModal: false
     });
   };
 
-  createRowsAndColumns() {
-
-  }
-
+  // get the current instructions
   getInstructions() {
     if (this.state.curGroup === -3) { // case for the very first instruction
       return `The goal of this game is to match the cards with related concepts. 
@@ -155,138 +186,50 @@ class CardBlock extends React.Component {
   render() {
     const cardList = [];
     const chunks = [];
+
+    // Create all cards and put in list
     for (let i = 0; i < this.state.cardInfo.length; i++) {
-      let cardGroup = this.state.cardInfo[i].group, cardNum = this.state.cardInfo[i].num;
-      let card = this.state.cardContent[cardGroup].cards[cardNum];
+      let cardNum = this.state.cardInfo[i];
+      let card = this.state.cardContent[cardNum.group].cards[cardNum.num];
 
-      //This manages the cards if all they contain is text
-      if ('text' in card) {
-        cardList.push(
-
-          <div className="cardRender">
-            <Card key={i} className={this.state.cardInfo[i].status} onClick={() => this.handleClick(i)}>
-
-              <Card.Text>{card['text']}</Card.Text>
-
-
-            </Card>
-
-            <div className="ellipseBox" onClick={() => { this.showModalText(card['text']); }}>
-              <FontAwesomeIcon icon={faEllipsisH} style={{ color: 'Black' }} size="2x" className="ellipseIcon" />
-            </div>
-
-
-            <div>
-
-              <Modal isOpen={this.state.showText} className="modalContainer" overlayClassName="Overlay" >
-
-                <div className="Modal">
-
-                  <div className="outerModalDiv ">
-
-
-                    <Row className="row-flex  justify-content-md-center modalRow  ">
-
-
-                      <div class="col-xl-12 colModalText" >
-                        <div className=" textModal">
-                          {this.state.cardOut}
-                        </div>
-                      </div>
-
-                      <div class="col-xl-12  " >
-                        <Button size="lg" onClick={e => { this.closeModal(); }} variant="primary btn-block">Close</Button>{' '}
-                      </div>
-
-
-                    </Row>
-
-                  </div>
-
-                </div>
-
-              </Modal>
-
-            </div>
-
-          </div>
-
-
-        );
-      }
-      //This manages the cards if they contain an image
-      else if ('img' in card) {
-        cardList.push(
-
-          <div className="cardRender">
-            <Card key={i} className={this.state.cardInfo[i].status} onClick={() => this.handleClick(i)}>
-              <Card.Img src={card['img']} alt={card['alt-text']} />
-            </Card>
-
-            <div className="ellipseBox" onClick={() => { this.showModalImage(card['img']); }}>
-              <FontAwesomeIcon icon={faEllipsisH} style={{ color: 'Black' }} size="2x" className="ellipseIcon" />
-            </div>
-
-
-            <div>
-
-              <Modal isOpen={this.state.showImage} className="modalContainer" overlayClassName="Overlay" >
-
-                <div className="Modal">
-
-                  <div className="outerModalDiv ">
-
-
-                    <Row className="row-flex  justify-content-md-center modalRow  ">
-
-
-                      <div class="col-xl-12 colModalImage" >
-                        <img src={this.state.cardOut} alt={card['alt-text']} className=" imageModal" />
-                      </div>
-
-                      <div class="col-xl-12  " >
-                        <Button size="lg" onClick={e => { this.closeModal(); }} variant="primary btn-block">Close</Button>{' '}
-                      </div>
-
-
-                    </Row>
-
-                  </div>
-
-                </div>
-
-              </Modal>
-
-            </div>
-
-          </div>
-        );
+      let innercontent;
+      if ('text' in card) { // This manages the cards if all they contain is text
+        innercontent = <Card.Text><CardText text={card['text']} /></Card.Text>;
+      } else if ('img' in card) { // This manages the cards if they contain an image
+        innercontent = <Card.Img src={card['img']} alt={card['alt-text']} />
       } else {
         console.log('Unrecognized card format:', card);
+        innercontent = <Card.Text>{'UNRECOGNIZED:' + card}</Card.Text>
       }
+      cardList.push(
+        <div key={i} className="cardRender">
+          <Card className={this.state.cardInfo[i].status} onClick={() => this.handleClick(i)}>
+            {innercontent}
+          </Card>
 
+          <div className="ellipseBox" onClick={() => { this.openModal(card); }}>
+            <FontAwesomeIcon icon={faEllipsisH} style={{ color: 'Black' }} size="2x" className="ellipseIcon" />
+          </div>
+        </div>
+      );
     }
 
+    // split list of cards into rows
     while (cardList.length) {
       chunks.push(cardList.splice(0, 5));
     }
 
-    return <div>
-
+    // display entire block of cards, with instructions, cards, and modal
+    return (<div>
+      <CardModal show={this.state.showModal} card={this.state.cardOut} closeFunc={this.closeModal} />
       <div className='instructions'>{this.getInstructions()}</div>
 
-      
-        {chunks.map(chunk => (
-          <div className="mainReturnDiv">
-          <Row className="row-flex justify-content-md-center">
-            {chunk.map(item => <Col xl={2} lg={2} md={2} sm={12} xs={12} className="gridProp" >{item}</Col>)}
-          </Row>
-          </div>
-        ))}
-
-      
-
-    </div>;
+      {chunks.map(chunk => (
+        <Row className="row-flex justify-content-md-center" key={'Row'+chunk[0].key}>
+          {chunk.map(item => <Col xl={2} lg={2} md={2} sm={12} xs={12} className="gridProp" key={'Cell' + item.key}>{item}</Col>)}
+        </Row>
+      ))}
+    </div>);
   }
 }
 
@@ -299,26 +242,13 @@ function App() {
           Matching Card Game (Work In Progess)
         </div>
 
-
-
-
-
-
       </header>
-      <body>
         <div className="mainDiv">
-
-          <Row className="row-flex">
-            <CardBlock></CardBlock>
-          </Row>
-
+          <CardBlock></CardBlock>
         </div>
-
-      </body>
-
-
     </div>
   );
 }
 
+Modal.setAppElement(document.getElementById('root')); // screen readers
 export default App;
