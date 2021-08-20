@@ -1,0 +1,224 @@
+
+/* MAIN PAGE CSS */
+/* ---------------------------------------- */
+
+.title {
+    color: gold;
+    font-size: 2em;
+}
+
+.topHeader {
+    height: 10vh;
+
+    display: flex;           /* establish flex container */
+    flex-direction: column;  /* make main axis vertical */
+    justify-content: center; /* center items vertically, in this case */
+    align-items: center; 
+}
+
+.mainDiv {
+    
+    display: flex;  
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.mainReturnDiv{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+
+.instructions {
+    color: #ddd;
+    text-align: center;
+    width: 50vw;
+    margin: 5px 25vw;
+    padding: auto 5px;
+}
+
+
+
+/* CARD CSS */
+/* ---------------------------------------- */
+
+.gridProp {
+    color: black;
+    margin: 10px;
+    background-color: white;
+    
+    border: black;
+    border-style: solid;
+    border-radius: 5px;
+    border-width: 2px;
+    padding: 7px;
+  }
+
+.row-flex {
+    width: 100vw;
+}
+
+.card {
+    overflow:hidden;
+    width: 100%;
+    height: 10em;
+    margin: 0.25em;
+    
+    text-align: center;
+    border: 3px black solid;
+    padding: 5px;
+}
+
+.cardRender{
+    display: flex;           /* establish flex container */
+    flex-direction: column;  /* make main axis vertical */
+    justify-content: center; /* center items vertically, in this case */
+    align-items: center;     /* center items horizontally, in this case */
+
+}
+
+.ellipseBox{
+    border: white;
+    border-style:solid;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    display: flex;    
+}
+
+.selected > img, .selected:hover > img{
+    opacity: 0.5;
+}
+
+.card-img{
+    width: 100%;
+    height: 100%;
+ }
+
+.selected, .selected:hover {
+    background-color: rgb(107, 95, 179);
+}
+
+.matched, .matched:hover {
+    opacity: 0.3;
+}
+
+
+/* MODAL CSS */
+/* ---------------------------------------- */
+
+.Modal {
+    height: 400px;
+    width: 500px;
+    background-color: white;
+
+
+    border: black;
+    border-style: solid;
+    border-radius: 10px;
+    border-width: 3px;
+
+}
+
+.modalContainer{
+    height: 100vh;
+    width: 100vw;
+
+    display: flex;  
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.Overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,.0001) !important;
+  }
+
+.ModalImage {
+    width: 100%;
+    height: 100%;
+}
+
+.modalRow {
+    width: 80%;
+    height: 100%;
+
+    display: flex;  
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.outerModalDiv{
+    width: 100%;
+    height: 100%;
+
+    display: flex;  
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.innerModalDiv{
+    width: 60%;
+    height: 80%;
+
+    display: flex;  
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.colModalImage {
+    width: 100%;
+    height: 70%;
+}
+
+.imageModal {
+    width: 100%;
+    height: 100%;
+}
+
+.colModalText {
+    width: 100%;
+    height: 70%;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+}
+
+.textModal {
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+
+.basicBorder {
+    border: black;
+    border-style: solid;
+}
+
+.buttonModal {
+    width: 100%;
+    height: 100%;
+}
+  
+
+
+.katex > .katex-html {
+    white-space: normal;
+}
+
+.katex .base {
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
